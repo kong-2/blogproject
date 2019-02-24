@@ -9,12 +9,15 @@ def home(request):
     #쿼리셋 #메소드
     #블로그 모든 글들을 대상으로
     blog_list = Blog.objects.all()
+    
     #블로그 객체 세개를 한 페이지로 자르기
+    
     paginator = Paginator(blog_list,3)
     #request된 페이지가 뭔지를 알아내고
     page = request.GET.get('page')
     #request된 페이지를 얻어온 뒤 return 해 준다
     posts = paginator.get_page(page)
+    
     return render(request, 'home.html',{'blogs':blogs,'posts':posts})
 
 def detail(request,blog_id):
@@ -51,4 +54,9 @@ def blogpost(request):
             post.pub_date = timezone.now()
             post.save()
             return redirect('home')
-       
+
+
+def destroy(request,blog_id):
+    blog = Blog.objects.get(pk=blog_id)
+    blog.delete()
+    return redirect('home')
